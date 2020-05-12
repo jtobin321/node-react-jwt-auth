@@ -1,30 +1,57 @@
 import "reflect-metadata";
 import 'dotenv/config';
+
 import express from "express";
+import cookieParser from 'cookie-parser'
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
+import { verify } from "jsonwebtoken";
+
 import { UserResolver } from "./UserResolver";
 import { createConnection } from "typeorm";
+import { User } from "./entity/User";
+import { createAccessToken } from "./auth";
 
-    (async () => { 
-        const app = express();
-        app.get("/", (_req, res) => res.send("hello"));
+(async () => {
+    const app = express();
+    app.use(cookieParser());
 
-        await createConnection();
+    app.get("/", (_req, res) => res.send("hello"));
 
-        const apolloServer = new ApolloServer({
-            schema: await buildSchema({
-                resolvers: [UserResolver]
-            }),
-            context: ({ req, res }) => ({ req, res })
-        });
+    app.post("/refresh_token", async (req, res) => {
+        const token = req.cookies.jwtid;
+        if (!token) return res.send({ success: false, accessToken: '' })
 
-        apolloServer.applyMiddleware({ app });
+        let payload: any = null;
+        try {
+            payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
+        } catch(err) {
+            console.log(err);
+            return res.send({ success: false, accessToken: '' })
+        }
 
-        app.listen(4000, () => {
-            console.log("express server started");
-        })
-    })();
+        // Token is now valid, send access token
+        const user = await User.findOne({ id: payload.userId });
+        if (!user) return res.send({ success: false, accessToken: '' })
+        
+        return res.send({ success: true, accessToken: createAccessToken(user) });
+    });
+
+    await createConnection();
+
+    const apolloServer = new ApolloServer({
+        schema: await buildSchema({
+            resolvers: [UserResolver]
+        }),
+        context: ({ req, res }) => ({ req, res })
+    });
+
+    apolloServer.applyMiddleware({ app });
+
+    app.listen(4000, () => {
+        console.log("express server started");
+    })
+})();
 
 // createConnection().then(async connection => {
 
