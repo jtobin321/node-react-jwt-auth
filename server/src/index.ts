@@ -13,6 +13,8 @@ import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
 
+const port = process.env.PORT;
+
 (async () => {
     const app = express();
     app.use(cookieParser());
@@ -42,7 +44,18 @@ import { sendRefreshToken } from "./sendRefreshToken";
         return res.send({ success: true, accessToken: createAccessToken(user) });
     });
 
-    await createConnection();
+    let retries = 5;
+    while (retries) {
+        try {
+            await createConnection();
+            break;
+        } catch(err) {
+            console.log(err);
+            retries -= 1;
+
+            await new Promise(res => setTimeout(res, 5000));
+        }
+    }
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
@@ -53,25 +66,7 @@ import { sendRefreshToken } from "./sendRefreshToken";
 
     apolloServer.applyMiddleware({ app });
 
-    app.listen(4000, () => {
-        console.log("express server started");
+    app.listen(port, () => {
+        console.log(`express server started on port: ${port}`);
     })
 })();
-
-// createConnection().then(async connection => {
-
-//     console.log("Inserting a new user into the database...");
-//     const user = new User();
-//     user.firstName = "Timber";
-//     user.lastName = "Saw";
-//     user.age = 25;
-//     await connection.manager.save(user);
-//     console.log("Saved a new user with id: " + user.id);
-
-//     console.log("Loading users from the database...");
-//     const users = await connection.manager.find(User);
-//     console.log("Loaded users: ", users);
-
-//     console.log("Here you can setup and run express/koa/any other framework.");
-
-// }).catch(error => console.log(error));

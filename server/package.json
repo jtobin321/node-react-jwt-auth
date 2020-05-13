@@ -1,7 +1,7 @@
 {
-   "name": "server",
+   "name": "node-react-jwt-auth",
    "version": "0.0.1",
-   "description": "Awesome project developed with TypeORM.",
+   "description": "Sample Node App to Use JWT Auth.",
    "devDependencies": {
       "@types/bcryptjs": "^2.4.2",
       "@types/cookie-parser": "^1.4.2",
@@ -16,6 +16,7 @@
    "dependencies": {
       "apollo-server-express": "^2.13.0",
       "bcryptjs": "^2.4.3",
+      "class-validator": "^0.12.2",
       "cookie-parser": "^1.4.5",
       "dotenv": "^8.2.0",
       "express": "^4.17.1",
@@ -27,6 +28,7 @@
       "typeorm": "0.2.24"
    },
    "scripts": {
-      "start": "nodemon --exec ts-node src/index.ts"
+      "start": "nodemon --exec ts-node src/index.ts",
+      "build": "tsc -b"
    }
 }
