@@ -10,7 +10,8 @@ import { verify } from "jsonwebtoken";
 import { UserResolver } from "./UserResolver";
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
-import { createAccessToken } from "./auth";
+import { createAccessToken, createRefreshToken } from "./auth";
+import { sendRefreshToken } from "./sendRefreshToken";
 
 (async () => {
     const app = express();
@@ -33,6 +34,8 @@ import { createAccessToken } from "./auth";
         // Token is now valid, send access token
         const user = await User.findOne({ id: payload.userId });
         if (!user) return res.send({ success: false, accessToken: '' })
+
+        sendRefreshToken(res, createRefreshToken(user));
         
         return res.send({ success: true, accessToken: createAccessToken(user) });
     });
