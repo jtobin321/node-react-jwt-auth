@@ -31,10 +31,12 @@ import { sendRefreshToken } from "./sendRefreshToken";
             return res.send({ success: false, accessToken: '' })
         }
 
-        // Token is now valid, send access token
         const user = await User.findOne({ id: payload.userId });
-        if (!user) return res.send({ success: false, accessToken: '' })
 
+        // Check if no user was found and if the refresh token is valid    
+        if (!user || user.tokenVersion !== payload.tokenVersion) return res.send({ success: false, accessToken: '' })
+
+        // Token is now valid, send token
         sendRefreshToken(res, createRefreshToken(user));
         
         return res.send({ success: true, accessToken: createAccessToken(user) });
