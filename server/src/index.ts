@@ -52,7 +52,8 @@ const port = process.env.PORT;
         } catch(err) {
             console.log(err);
             retries -= 1;
-
+            console.log(`number of retries left: ${retries}`);
+            // wait 5 seconds to try connecting to db again
             await new Promise(res => setTimeout(res, 5000));
         }
     }
