@@ -30,5 +30,8 @@
    "scripts": {
       "start": "nodemon --exec ts-node src/index.ts",
       "build": "tsc -b"
-   }
+   },
+   "resolutions": {
+      "tslib": "1.11.2"
+  }
 }
