@@ -21,4 +21,4 @@
        "migrationsDir": "dist/src/migration",
        "subscribersDir": "dist/src/subscriber"
     }
- }
+}
