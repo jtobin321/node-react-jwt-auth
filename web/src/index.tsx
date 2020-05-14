@@ -14,4 +14,4 @@ ReactDOM.render(
     <App />
   </ApolloProvider>,
   document.getElementById('root')
-);
+)
