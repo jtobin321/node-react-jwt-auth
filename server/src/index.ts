@@ -7,11 +7,11 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { verify } from "jsonwebtoken";
 
-import { UserResolver } from "./UserResolver";
+import { UserResolver } from "./resolvers/UserResolver";
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
-import { createAccessToken, createRefreshToken } from "./auth";
-import { sendRefreshToken } from "./sendRefreshToken";
+import { createAccessToken, createRefreshToken } from "./auth/auth";
+import { sendRefreshToken } from "./auth/sendRefreshToken";
 
 const port = process.env.PORT;
 
