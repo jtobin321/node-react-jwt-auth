@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { verify } from "jsonwebtoken";
+import cors from 'cors';
 
 import { UserResolver } from "./resolvers/UserResolver";
 import { createConnection } from "typeorm";
@@ -17,6 +18,10 @@ const port = process.env.PORT;
 
 (async () => {
     const app = express();
+    app.use(cors({
+        origin: 'http://localhost:3000',
+        credentials: true
+    }))
     app.use(cookieParser());
 
     app.get("/", (_req, res) => res.send("hello"));
@@ -65,7 +70,7 @@ const port = process.env.PORT;
         context: ({ req, res }) => ({ req, res })
     });
 
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({ app, cors: false });
 
     app.listen(port, () => {
         console.log(`express server started on port: ${port}`);
