@@ -10,9 +10,7 @@ const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
   credentials: 'include',
   request: (operation) => {
-    console.log('made it here');
     const accessToken = getAccessToken();
-    console.log(accessToken)
     if (accessToken) {
       operation.setContext({
         headers: {

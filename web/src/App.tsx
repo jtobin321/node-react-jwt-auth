@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Routes } from './Routes';
+import React, { useState, useEffect } from "react";
+import { Routes } from "./Routes";
+import { setAccessToken } from "./accessToken";
 
-interface Props {
-
-}
+interface Props {}
 
 export const App: React.FC<Props> = () => {
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        
-    }, [])
+  useEffect(() => {
+    fetch("http://localhost:4000/refresh_token", {
+        method: "POST",
+        credentials: "include" 
+    }).then(async resp => {
+        const { accessToken } = await resp.json();
+        setAccessToken(accessToken);
+        setLoading(false);
+    });
+  }, []);
 
-    if (loading) return <div>loading...</div> // loading animation goes here
+  if (loading) return <div>loading...</div>; // loading animation goes here
 
-    return <Routes />;
-}
+  return <Routes />;
+};

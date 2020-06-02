@@ -18,16 +18,12 @@ export const Login: React.FC<RouteComponentProps> = ({history}) => {
         <form 
             onSubmit={async e => {
                 e.preventDefault();
-                console.log('form submitted');
-                console.log(email, password);
                 const response = await login({
                     variables: {
                         email,
                         password
                     }
                 });
-
-                console.log(response);
 
                 if (response && response.data) {
                     setAccessToken(response.data.login.accessToken);
