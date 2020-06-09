@@ -1,9 +1,14 @@
-# jwt-auth-example
+# node-react-jwt-auth
 
-Code for https://www.youtube.com/watch?v=25GS0MLT8JU
+Sample web app to demonstrate how learn to add JWT authentication to a project using Node.js, Typescript, GraphQL, React, and PostgreSQL, and Docker.
 
-## Make sure to setup PostgreSQL for the GraphQL server
+## To use this sample:
 
-1. Install PostgreSQL on your computer
-2. Create database called `jwt-auth-example`
-3. [Add a user](https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e) with the username `postgres` and and no password. (You can change what these values are in the [ormconfig.json](https://github.com/benawad/graphql-ts-server-boilerplate/blob/master/ormconfig.json))
+1. Clone this repo `git clone https://github.com/jtobin321/node-react-jwt-auth.git`
+2. Start up the back-end server:
+    * `cd server`
+    * Build the api image locally: `docker build -t node-react-jwt-auth`
+    * start the api and database containers locally: `docker-compose up`
+3. Start the front-end:
+    * `cd ../web && npm install`
+    * `npm start`
